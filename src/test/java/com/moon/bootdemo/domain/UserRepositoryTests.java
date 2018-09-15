@@ -1,4 +1,4 @@
-package com.moon.bootdemo;
+package com.moon.bootdemo.domain;
 
 import com.moon.bootdemo.domain.User;
 import com.moon.bootdemo.domain.UserRepository;
