@@ -42,3 +42,7 @@ dependencies {
 	compile('org.webjars.bower:vue-resource:0.7.0')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
+
+clean.doFirst {
+	delete "out/"
+}
