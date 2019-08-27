@@ -2,7 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-class App extends React.Component{
+class Login extends React.Component{
   render(){
     const loginUrl = 'http://localhost:8080/login/github?auth_url=' + window.location.href;
 
@@ -14,4 +14,4 @@ class App extends React.Component{
   }
 }
 
-export default App;
+export default Login;
