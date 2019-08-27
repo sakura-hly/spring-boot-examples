@@ -34,8 +34,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @SpringBootApplication
 @RestController
@@ -49,10 +47,8 @@ public class MyOAuthApp extends WebSecurityConfigurerAdapter {
     private OAuth2ClientContext oauth2ClientContext;
 
     @RequestMapping({ "/user", "/me" })
-    public Map<String, String> user(Principal principal) {
-        Map<String, String> map = new LinkedHashMap<>();
-        map.put("name", principal.getName());
-        return map;
+    public Principal user(Principal principal) {
+        return principal;
     }
 
     @Override
@@ -68,10 +64,10 @@ public class MyOAuthApp extends WebSecurityConfigurerAdapter {
 //                .permitAll().anyRequest()
 //                .authenticated();
         http.antMatcher("/**").authorizeRequests().antMatchers("/", "/login**", "/webjars/**", "/error**").permitAll().anyRequest()
-                .authenticated().and().exceptionHandling()
-                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/")).and().logout()
-                .logoutSuccessUrl("/").permitAll().and().csrf()
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
+                .authenticated()
+                .and().exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/"))
+                .and().logout().logoutSuccessUrl("/").permitAll()
+                .and().csrf().disable()//.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
     }
 

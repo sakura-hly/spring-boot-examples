@@ -16,5 +16,5 @@ export default [
     { path: "/a", name: "A", component: A, auth: true },
     { path: "/b", name: "B", component: B, auth: true },
     { path: "/c", name: "C", component: C, auth: true },
-    { path: "/login", name: "Login", component: Login },
+    { path: "/login", name: "Login", component: Login},
   ]

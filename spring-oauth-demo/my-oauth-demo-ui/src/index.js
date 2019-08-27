@@ -1,11 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { createStore, applyMiddleware } from 'redux'
+import { Provider } from 'react-redux'
+import thunk from 'redux-thunk';
 import './index.css';
 import App from './Login';
 import GlobalRouter from './GlobalRouter';
+import RootReducer from './Me'
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<GlobalRouter />, document.getElementById('root'));
+let store = createStore(RootReducer, applyMiddleware(thunk))
+
+ReactDOM.render(
+    <Provider store={store}>
+        <GlobalRouter />
+    </Provider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

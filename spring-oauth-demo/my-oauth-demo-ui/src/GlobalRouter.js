@@ -8,6 +8,9 @@ import {
     withRouter
 } from "react-router-dom";
 
+import { connect } from 'react-redux'
+import { setMe } from './Action';
+
 import RouterMap from "./RouterMap";
 
 const Nav = () => {
@@ -33,14 +36,14 @@ class GlobalRouter extends Component {
         this.state = {}
     }
     render() {
-        let token = this.props.token;
+        // let token = this.props.token || true;
         return (
             <Router>
                 <div>
                     <Switch>
                         {RouterMap.map((item, index) => {
                             return <Route key={index} path={item.path} exact
-                                render={this.beforeRoute(item, token)} />
+                                render={this.beforeRoute(item)} />
                         })}
                         // 所有错误路由跳转页面
                         <Route render={() => <h1>404</h1>} />
@@ -50,17 +53,42 @@ class GlobalRouter extends Component {
         )
     }
 
-    beforeRoute(item, token) {
+    beforeRoute(item) {
         return props => (!item.auth
-            ? (<div><nav /><item.component {...props} /></div>)
-            : (token
-                ? <item.component {...props} />
-                : <Redirect to={{
-                    pathname: '/login',
-                    state: { from: props.location }
-                }} />));
+            ? (<div><Nav /><item.component {...props} /></div>)
+            : (this.redirect(item, props)));
+
+    }
+
+    redirect(item, props) {
+        // console.log(props.soeid);
+        if (props.soeid) {
+            return <div><Nav /><item.component {...props} /> </div>;
+        } else {
+            this.props
+                .setMe()
+                .then(() => {
+                    return <div><Nav /><item.component {...props} /> </div>;
+                });
+        }
+        // return true
+        //     ? <div><Nav /><item.component {...props} /> </div>
+        //     : <Redirect to={{
+        //         pathname: '/login',
+        //         state: { from: props.location }
+        //     }} />;
+    }
+
+}
+const mapStateToProps = (state) => {
+    return {
+        soeid: state.soeid,
     }
 }
 
-export default GlobalRouter;
+const mapDispatchToProps = dispatch => ({
+    setMe: () => dispatch(setMe())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(GlobalRouter);
 
