@@ -4,9 +4,6 @@ github:
     clientSecret: 085db6254e6b23ee6f713006cac853261579c397
     accessTokenUri: https://github.com/login/oauth/access_token
     userAuthorizationUri: https://github.com/login/oauth/authorize
-    #      useCurrentUri: false
-    #      redirectUri: http://localhost:8080/auth/redirect
-    #      tokenName: oauth_token
     authenticationScheme: query
     clientAuthenticationScheme: form
   resource:
