@@ -63,9 +63,10 @@ public class MyOAuthApp extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/", "/login**", "/auth/redirect", "/webjars/**", "/error**")
 //                .permitAll().anyRequest()
 //                .authenticated();
-        http.antMatcher("/**").authorizeRequests().antMatchers("/", "/login**", "/webjars/**", "/error**").permitAll().anyRequest()
-                .authenticated()
-                .and().exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/"))
+        http.cors()
+                .and().antMatcher("/**").authorizeRequests()
+                .antMatchers("/", "/login**", "/webjars/**", "/error**").permitAll().anyRequest().authenticated()
+                .and().exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and().logout().logoutSuccessUrl("/").permitAll()
                 .and().csrf().disable()//.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);

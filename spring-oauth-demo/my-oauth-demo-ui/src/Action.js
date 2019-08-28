@@ -1,35 +1,40 @@
 import axios from "axios";
+import { SET_ME_SUCCESS } from "./Type";
 
-const setMeSuccess = (soeid) => ({
-    type: 'SET_ME_SUCCESS',
-    soeid,
-    receivedAt: Date.now()
+const setMeSuccess = (name) => ({
+    type: SET_ME_SUCCESS,
+    name
 });
 
-const setMeFail = (error, soeid) => ({
+const setMeFail = (error, name) => ({
     type: 'SET_ME_FAIL',
-    error,
-    soeid,
+    name,
     receivedAt: Date.now(),
 });
 
-export function setMe() {
+export const setMe = () => { 
     // We can invert control here by returning a function - the "thunk".
     // When this function is passed to `dispatch`, the thunk middleware will intercept it,
     // and call it with `dispatch` and `getState` as arguments. 
     // This gives the thunk function the ability to run some logic, and still interact with the store.
-    return function (dispatch) {
+    return (dispatch) => {
         return axios({
-                method: 'get',
-                url: 'http://localhost:8080/me',
-                // headers: {
-                //     '':'*'
-                // },
-                withCredentials: true
-            })
-            .then(
-                res => dispatch(setMeSuccess(res.data.me)),
-                error => dispatch(setMeFail(error, 'NO ONE'))
-            );
+            method: 'get',
+            url: 'http://localhost:8080/me',
+            headers: {
+                'Access-Control-Allow-Origin': '*'
+            },
+            withCredentials: true
+        })
+        // .then(
+        //     res => res.data.name,
+        //     error => console.log(error),
+        // )
+        .then(res => {
+            dispatch(setMeSuccess(res.data.name));
+        })
+        .catch(error => {
+            throw(error);
+        });
     };
 }
