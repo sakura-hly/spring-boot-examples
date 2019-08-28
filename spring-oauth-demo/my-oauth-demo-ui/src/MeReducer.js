@@ -2,14 +2,21 @@ import { combineReducers } from 'redux'
 import { SET_ME_SUCCESS } from "./Type";
 
 const initState = {
-    name: 'NO ONE'
+    name: 'none'
 }
 
 function meReducer(state = initState, action) {
 
     switch (action.type) {
         case SET_ME_SUCCESS:
-            return action.name;
+            // return Object.assign({}, state, {
+            //     name: action.name
+            // })
+            // return action;
+            return {
+                ...state,
+                name: action.name
+            };
         // case 'SET_ME_FAIL':
         //     return Object.assign({}, state, {
         //         name: action.name
@@ -21,7 +28,7 @@ function meReducer(state = initState, action) {
 
 
 const rootReducer = combineReducers({
-    me: meReducer
+    meReducer
 })
 
 export default rootReducer

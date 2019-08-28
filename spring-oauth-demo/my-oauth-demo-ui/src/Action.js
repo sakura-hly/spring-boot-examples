@@ -26,15 +26,15 @@ export const setMe = () => {
             },
             withCredentials: true
         })
-        // .then(
-        //     res => res.data.name,
-        //     error => console.log(error),
-        // )
-        .then(res => {
-            dispatch(setMeSuccess(res.data.name));
-        })
-        .catch(error => {
-            throw(error);
-        });
+        .then(
+            res => dispatch(setMeSuccess(res.data.name)),
+            error => console.log(error),
+        )
+        // .then(name => {
+        //     dispatch(setMeSuccess(name));
+        // });
+        // .catch(error => {
+        //     throw(error);
+        // });
     };
 }

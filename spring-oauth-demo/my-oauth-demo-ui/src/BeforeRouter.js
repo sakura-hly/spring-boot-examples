@@ -8,7 +8,7 @@ import {
     withRouter
 } from "react-router-dom";
 
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { setMe } from './Action';
 import Login from "./Login";
@@ -34,29 +34,24 @@ const Nav = () => {
 class BeforeRouter extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            name: props.name
-        }
     }
 
     componentDidMount() {
-        // console.log(this.props.name);
-        if (!this.props.name || this.props.name == 'NO ONE') {
+        // if (!this.props.me || this.props.me == 'none') {
             this.props.setMe()
-        }
+        // }
     }
 
     render() {
         return (
             <div>
                 {
-                    (!this.props.name || this.props.name == 'NO ONE')
-                        ? <Redirect to={{
+                    (this.props.me && this.props.me != 'none')
+                        ? <div><Nav /><this.props.item.component {...this.props} /></div>
+                        : <Redirect to={{
                             pathname: '/login',
                             state: { from: this.props.location }
                         }} />
-                        :
-                        <div><Nav /><this.props.item.component {...this.props} /></div>
                 }
             </div>
         );
@@ -65,7 +60,7 @@ class BeforeRouter extends Component {
 
 const mapStateToProps = state => {
     return {
-        name: state.me.name,
+        me: state.meReducer.name,
     }
 };
 
