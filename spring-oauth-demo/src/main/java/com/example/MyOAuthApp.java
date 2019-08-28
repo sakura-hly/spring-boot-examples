@@ -13,6 +13,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
@@ -23,6 +24,7 @@ import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilt
 import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,7 +48,7 @@ public class MyOAuthApp extends WebSecurityConfigurerAdapter {
     @Autowired
     private OAuth2ClientContext oauth2ClientContext;
 
-    @RequestMapping({ "/user", "/me" })
+    @RequestMapping({"/user", "/me"})
     public Principal user(Principal principal) {
         return principal;
     }
@@ -67,7 +69,10 @@ public class MyOAuthApp extends WebSecurityConfigurerAdapter {
                 .and().antMatcher("/**").authorizeRequests()
                 .antMatchers("/", "/login**", "/webjars/**", "/error**").permitAll().anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                .and().logout().logoutSuccessUrl("/").permitAll()
+                .and().logout().logoutSuccessHandler((httpServletRequest, httpServletResponse, authentication) -> {
+                    logger.info("********************************* Logout Successfully ****************************");
+                    httpServletResponse.setStatus(HttpStatus.OK.value());
+                }).permitAll()
                 .and().csrf().disable()//.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
     }
@@ -111,6 +116,7 @@ public class MyOAuthApp extends WebSecurityConfigurerAdapter {
             }
         };
     }
+
     public static void main(String[] args) {
         SpringApplication.run(MyOAuthApp.class, args);
     }

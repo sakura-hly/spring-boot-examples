@@ -10,7 +10,6 @@ import './App.css';
 class Login extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props);
   }
   componentDidMount() {
 
@@ -21,11 +20,13 @@ class Login extends React.Component {
 
     return (
       <div>
+        {console.log(this.props.me)
+        }
         {
           (this.props.me && this.props.me != 'none')
             ? <Redirect to={{
-              pathname: this.props.location.state.from.pathname,
-              state: { from: this.props.location }
+              pathname: '/'//this.props.location.state.from.pathname,
+              // state: { from: this.props.location }
             }} />
             :
             (<div className="App">

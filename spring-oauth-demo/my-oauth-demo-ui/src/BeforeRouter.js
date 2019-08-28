@@ -11,22 +11,26 @@ import {
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { setMe } from './Action';
-import Login from "./Login";
+import Logout from './Logout';
 
 
 const Nav = () => {
     return (
-        <ul>
-            <li>
-                <Link to="/a">A</Link>
-            </li>
-            <li>
-                <Link to="/b">B</Link>
-            </li>
-            <li>
-                <Link to="/c">C</Link>
-            </li>
-        </ul>
+        <div>
+            <ul>
+                <li>
+                    <Link to="/a">A</Link>
+                </li>
+                <li>
+                    <Link to="/b">B</Link>
+                </li>
+                <li>
+                    <Link to="/c">C</Link>
+                </li>
+            </ul>
+
+            <Logout />
+        </div>
     );
 }
 
@@ -37,24 +41,32 @@ class BeforeRouter extends Component {
     }
 
     componentDidMount() {
-        // if (!this.props.me || this.props.me == 'none') {
-            this.props.setMe()
-        // }
+        if (!this.props.me || this.props.me === 'init') {
+            this.props.setMe();
+        }
     }
 
     render() {
-        return (
-            <div>
-                {
-                    (this.props.me && this.props.me != 'none')
-                        ? <div><Nav /><this.props.item.component {...this.props} /></div>
-                        : <Redirect to={{
-                            pathname: '/login',
-                            state: { from: this.props.location }
-                        }} />
-                }
-            </div>
-        );
+        if (!this.props.me || this.props.me === 'init') {
+            // just wait
+            return null;
+        } else if (this.props.me === 'none') {
+            // redirect to login
+            return <Redirect to={{
+                pathname: '/login',
+                state: { from: this.props.location }
+            }} />;
+        } else {
+            // go to next page
+            if (this.props.item.path === '/login') {
+                return <Redirect to={{
+                    pathname: '/',
+                    state: { from: this.props.location }
+                }} />;
+            } else {
+                return <div><Nav /><this.props.item.component {...this.props} /></div>;
+            }
+        }
     }
 }
 
